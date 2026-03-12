@@ -14,7 +14,7 @@ The system collects real product data from Mexican supermarket websites using Sc
 - Soriana 
 - La Gran Bodega
 
-This supermarkets were chosen based on their open policies for scraping. Without hurting neither the system nor the supermarket website. (Based on robots.txt)
+These supermarkets were selected because their websites allow responsible scraping according to their robots.txt policies.  
 
 Each scraping run collects product information including:
 
@@ -36,11 +36,9 @@ The collected data is stored in a PostgreSQL database for further normalization 
 
 # Problem/Motivation
 
-This project originated from a simple real-life question:
+The idea originated from everyday grocery shopping discussions with my brother by asking:
 
-When buying groceries, how can we know which store — or combination of stores — offers the lowest total cost for an entire shopping basket?
-
-My brother and I have been thinking on it.
+**When buying groceries, how can we know which store — or combination of stores — offers the lowest total cost for an entire shopping basket?**
 
 Consumers usually compare prices product by product, but determining the optimal store combination is a more complex optimization problem often studied in Operations Research.
 This system explores how such optimization could be applied to everyday consumer shopping. Even when individual product prices are visible, it is difficult to determine:
@@ -134,13 +132,17 @@ Current capabilities:
   
 The system was intentionally designed to support machine learning extensions.Planned features include:
 
-- Location system for scrap the closest supermarkets and be region based improving results.
+- Location-aware scraping to prioritize supermarkets near the user's region, improving relevance of price comparisons.
 - Embedding-based product similarity: Use vector embeddings to improve product matching across stores where product names differ.
 - Shopping basket optimization: Compute the minimum cost combination of stores for an entire grocery basket.
 - API layer: Expose the ranking and comparison engine through a REST API.
-- User Interface for deployment in real world.
+- User interface for real-world deployment.
 
-This system is intended to work as a first layer of a more complex project which is based on create personalized diets. This layer would be used to be connnected to the diet app which gives the list of products for the recipes and then is searched by the optimizer giving a full user experience.
+This system is intended to serve as the first layer of a larger project focused on personalized nutrition systems.
+The long-term goal is to connect dietary recommendation systems with grocery price optimization. A diet application would generate a list of ingredients for recipes, and the optimizer would then compute the most cost-efficient stores for purchasing them.
+
+## Example Usage
+
 
 ## Potential Applications
 
