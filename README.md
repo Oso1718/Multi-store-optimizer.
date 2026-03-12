@@ -71,6 +71,104 @@ Basket Optimization (future step)
 
 Design principle: **Separate data extraction from product intelligence**. This allows the system to scale as more stores and product categories are added.
 
+## Project Structure
+
+```
+multi-store-optimizer/
+
+comercios/
+    comercios/
+        spiders/
+            chedraui.py
+            gran_bodega.py
+            precios_comercios.py # For testing porpuses
+            precios_searcher.py # For testing porpuses
+            soriana.py
+        items.py
+        middlewares.py
+        pipelines.py
+        settings.py
+
+    db/
+        database.py
+
+    utils/
+        unidades.py
+        parser.py
+
+    main.py
+    scrapy.cfg
+
+Documentacion/
+    Documentacion general.pdf
+granbodega.html   # Testing
+scraper.py        # Testing
+
+```
+
+## Pipeline
+
+The pipeline processes every item extracted by the spiders and performs the following steps:
+- Normalize product names
+- Detect product brand
+- Resolve canonical product
+- Extract quantity and unit
+- Store product if it doesn't exist
+- Store price with timestamp
+- Associate results with the search query
+
+**Pipeline flow:**
+
+Spider → Item → Pipeline → PostgreSQL
+
+**Database Tables**
+
+The pipeline interacts with the following tables:
+
+
+| Table                   | Description                             |
+| ----------------------- | --------------------------------------- |
+| `productos`             | Canonical product names                 |
+| `aliases_producto`      | Maps search terms to canonical products |
+| `productos_encontrados` | Store-specific product listings         |
+| `precios`               | Historical price tracking               |
+| `marcas`                | Detected brands                         |
+
+
+## Key Pipelines Features
+
+**Text Normalization**
+
+Product names are normalized to simplify comparisons.
+
+Example: "Leche Alpura® 1L" → "leche alpura 1l"
+
+Includes:
+- lowercase conversion
+- accent removal
+- special character cleanup
+
+**Brand Detection**
+
+- Exact match against validated brands
+- Fuzzy matching using RapidFuzz
+- Heuristic detection for unknown brands
+
+New potential brands are automatically stored for later validation.
+
+**Unit Extraction**
+
+Product units are extracted from product titles using:
+```utils/unidades.py```
+
+Example:
+
+| Product    | Quantity | Unit |
+| ---------- | -------- | ---- |
+| Arroz 500g | 500      | g    |
+| Leche 1L   | 1        | L    |
+
+This allows price-per-unit comparisons.
 
 # Technology Stack
 
@@ -142,6 +240,41 @@ This system is intended to serve as the first layer of a larger project focused 
 The long-term goal is to connect dietary recommendation systems with grocery price optimization. A diet application would generate a list of ingredients for recipes, and the optimizer would then compute the most cost-efficient stores for purchasing them.
 
 ## Example Usage
+
+```
+SELECT *
+FROM ranking_productos
+ORDER BY precio_unitario ASC
+LIMIT 3;
+```
+
+| producto_id | nombre                                             | tienda   | marca | precio | cantidad_base | unidad_base | precio_unitario |
+|-------------|----------------------------------------------------|----------|-------|--------|---------------|-------------|-----------------|
+| 4 | Refresco Coca-Cola Sin Azúcar 3L | Chedraui |  | 38.0 | 3000 | ml | 0.012666666666666666 |
+| 3 | Leche Entera Valley Foods 1 Litro | Soriana |  | 16.1 | 1000 | ml | 0.0161 |
+| 4 | Refresco Coca-Cola Original 3L | Chedraui |  | 50.0 | 3000 | ml | 0.016666666666666666 |
+| 3 | Producto Lácteo Combinado Precíssimo 1 L | Soriana |  | 17.0 | 1000 | ml | 0.017 |
+
+```
+SELECT
+    p.producto_id,
+    pe.nombre,
+    pe.cantidad_base
+FROM precios p
+JOIN productos_encontrados pe
+    ON pe.id = p.producto_encontrado_id
+LIMIT 5;
+```
+
+| producto_id | nombre                                   | cantidad_base |
+|-------------|-------------------------------------------|---------------|
+| 3 | Leche Caracol Entera 1 Galón | 1 |
+| 3 | Leche Alpura Clásica Pasteurizada 1 L | 1000 |
+| 3 | Leche Evaporada Sello Rojo 1 L | 1000 |
+| 3 | Leche Caracol Low Fat 1 Galón | 1 |
+| 3 | Tinte Nutrisse 7.777 Café/Leche 1 Pieza | 1 |
+
+All share the same producto_id due to the id is linked to the main product in this case "leche"
 
 
 ## Potential Applications
