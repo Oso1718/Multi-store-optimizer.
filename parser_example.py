@@ -13,9 +13,9 @@ def normalizar(texto: str) -> str:
 
 def separar_productos(texto):
     """
-    Convierte:
+    Convierte listas complejas como:
     'huevo, leche, carne'
-    en:
+    en items separados:
     ['huevo', 'leche', 'carne']
     """
 
@@ -29,29 +29,3 @@ def separar_productos(texto):
     productos = [normalizar(p.strip()) for p in productos if p.strip()]
 
     return productos
-###
-'''
-def parse_products(input_text: str) -> list[str]:
-    """
-    Convierte:
-    'huevo, leche, carne'
-    'huevo leche carne'
-    'huevo; leche'
-    -> ['huevo', 'leche', 'carne']
-    """
-
-    if not input_text:
-        return []
-
-    # separar por coma, punto y coma o espacio
-    productos = re.split(r"[,\n;]+", input_text)
-
-    # limpiar espacios y lowercase
-    products = [
-        p.strip().lower()
-        for p in productos
-        if p.strip()
-    ]
-
-    return products
-'''
