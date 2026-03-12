@@ -6,6 +6,10 @@ The system implements a scalable data pipeline architecture capable of scraping 
 
 This project was designed with **future machine learning integration** in mind, including embedding-based product similarity and multi-store basket optimization.
 
+## Project Overview
+
+Multi-store-optimizer is a data pipeline designed to collect, normalize and analyze supermarket prices across multiple stores in Mexico. The goal is to build a system capable of identifying the cheapest grocery basket by combining products from different supermarkets.
+
 # Real Data Collection
 
 The system collects real product data from Mexican supermarket websites using Scrapy spiders.Currently supported stores include:
@@ -64,15 +68,16 @@ The system follows a modular **data pipeline architecture**:
 
 ```
 Web Scrapers (Scrapy)
-↓
+         ↓
 Data Normalization Layer
-↓
+         ↓
 PostgreSQL Database
-↓
+         ↓
 SQL Ranking Engine
-↓
+         ↓
 Basket Optimization (future step)
 ```
+![pipeline](pipeline.jpeg)
 
 Design principle: **Separate data extraction from product intelligence**. This allows the system to scale as more stores and product categories are added.
 
@@ -318,14 +323,14 @@ The optimization module will evaluate these combinations and return the lowest-c
 
 **Planned Implementation**
 
-The first implementation will use a brute-force search with pruning, which is sufficient for small shopping lists. The Idea in the future is apply optimization for speed.
+The first implementation will use a brute-force search with pruning, which is sufficient for small shopping lists. Future versions will explore optimization techniques to improve performance.
 
 Future versions may implement:
 - dynamic programming
 - linear optimization
 - heuristic search
 - multivariable minimax
-- stocasthic gradient descent
+- stochastic gradient descent
 
 
 ## Potential Applications
