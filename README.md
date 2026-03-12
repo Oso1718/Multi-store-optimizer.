@@ -53,6 +53,11 @@ This project addresses that problem by building a system capable of:
 - computing standardized unit prices
 - ranking products by cost efficiency
 
+## Inquiries & Code Access
+**Due to ongoing development and potential commercial applications, some components of this system are maintained in a private repository.**
+
+![Contact me](contact.png)
+
 # System Architecture
 
 The system follows a modular **data pipeline architecture**:
