@@ -146,7 +146,7 @@ The pipeline interacts with the following tables:
 
 Product names are normalized to simplify comparisons.
 
-Example: "Leche Alpura® 1L" → "leche alpura 1l"
+Example: "Leche Alpura 1L" → "leche alpura 1l"
 
 Includes:
 - lowercase conversion
@@ -281,11 +281,56 @@ LIMIT 5;
 
 All share the same producto_id due to the id is linked to the main product in this case "leche"
 
+## Basket Optimization (Under Development)
+
+The next step of the project is implementing a shopping basket optimization engine. The goal is to determine the lowest total cost for a user's grocery list across multiple stores.
+Example input:
+
+```
+User shopping list:
+- milk
+- eggs
+- rice
+- yogurt
+```
+
+The system will:
+- Match each item to comparable products across stores
+- Retrieve the best unit price for each product
+- Evaluate different store combinations
+
+Return the minimum-cost basket
+
+**Cost Function**
+
+The total cost of a shopping basket will be computed as:
+```Total Basket Cost = Σ product_price(store_i)```
+Where each product may be purchased from a different store depending on price.
+
+**Optimization Challenge**
+
+If the system evaluates multiple stores, the number of possible combinations grows quickly.
+```
+5 products × 3 stores
+Possible combinations = 3^5 = 243
+```
+The optimization module will evaluate these combinations and return the lowest-cost solution.
+
+**Planned Implementation**
+
+The first implementation will use a brute-force search with pruning, which is sufficient for small shopping lists. The Idea in the future is apply optimization for speed.
+
+Future versions may implement:
+- dynamic programming
+- linear optimization
+- heuristic search
+- multivariable minimax
+- stocasthic gradient descent
+
 
 ## Potential Applications
 
 Although this project focuses on grocery price intelligence, the same architecture can be applied to other domains such as:
-
 - supplier cost optimization in supply chains
 - procurement analysis for organizations
 - price monitoring systems
